@@ -7,6 +7,18 @@ var Controller = require('./lib/Controller');
 var Authorizer = require('./lib/Authorizer');
 var _ = require('underscore');
 
+Controller = Controller.extend({
+	createAuthorizer: function(type, modelName){
+		var authorizer = type;
+
+		if(_.isString(type) || _.size(type) === 1){
+			authorizer = new DefaultAuthorizer(type);
+		}
+
+		return authorizer;
+	}
+});
+
 var DefaultAuthorizer = Authorizer.extend({
 	getCoreAuthorizer: function(){
 		if(!this._authorizer && CoreAuthorizer){
@@ -52,19 +64,13 @@ module.exports = function(sails){
 			}
 
 			extendBlueprints(cb);
-		}
+		},
+
+		Authorizer: Authorizer,
+
+		Controller: Controller
 	};
 };
 
 module.exports.Authorizer = Authorizer;
-module.exports.Controller = Controller.extend({
-	createAuthorizer: function(type, modelName){
-		var authorizer = type;
-
-		if(_.isString(type) || _.size(type) === 1){
-			authorizer = new DefaultAuthorizer(type);
-		}
-
-		return authorizer;
-	}
-});
+module.exports.Controller = Controller;
