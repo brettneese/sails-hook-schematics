@@ -7,18 +7,6 @@ var Controller = require('./lib/Controller');
 var Authorizer = require('./lib/Authorizer');
 var _ = require('underscore');
 
-Controller = Controller.extend({
-	createAuthorizer: function(type, modelName){
-		var authorizer = type;
-
-		if(_.isString(type) || _.size(type) === 1){
-			authorizer = new DefaultAuthorizer(type);
-		}
-
-		return authorizer;
-	}
-});
-
 var DefaultAuthorizer = Authorizer.extend({
 	getCoreAuthorizer: function(){
 		if(!this._authorizer && CoreAuthorizer){
@@ -30,6 +18,18 @@ var DefaultAuthorizer = Authorizer.extend({
 
 	authorizeFor: function(req, model, action, cb){
 		return this.getCoreAuthorizer().authorizeFor(req, model, action, cb);
+	}
+});
+
+Controller = Controller.extend({
+	createAuthorizer: function(type, modelName){
+		var authorizer = type;
+
+		if(_.isString(type) || _.size(type) === 1){
+			authorizer = new DefaultAuthorizer(type);
+		}
+
+		return authorizer;
 	}
 });
 
